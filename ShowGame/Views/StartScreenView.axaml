@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:CompileBindings="False"
+             x:Class="ShowGame.Views.StartScreenView">
+
+	<Grid ShowGridLines="False" Background="Green">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+			<ColumnDefinition/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<!-- PAGE TITLE -->
+		<TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   FontWeight="ExtraBold" Foreground="White" FontSize="35">AntWar</TextBlock>
+
+		<!-- BUTTON STARTGAME -->
+		<Button Grid.Row="2" Grid.Column="1" Grid.RowSpan="1" Command="{Binding StartGamePage}"
+                HorizontalAlignment="Stretch" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                FontWeight="ExtraBold" Background="YellowGreen" Foreground="Black">Start</Button>
+
+		<!-- BUTTON RULES -->
+		<Button Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Command="{Binding RulesPage}"
+                HorizontalAlignment="Stretch" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                FontWeight="ExtraBold" Background="YellowGreen" Foreground="Black">Rules</Button>
+	</Grid>
+	
+</UserControl>
