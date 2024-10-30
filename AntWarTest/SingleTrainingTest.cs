@@ -2,15 +2,6 @@
 
 namespace AntWarTest
 {
-    public class UnitTestAntNorth1 : AntBase
-    {
-        public override void Move(ScopeData scope, List<AntBase> mates)
-        {
-            Console.WriteLine(scope);
-            North();
-        }
-    }
-
     public class SingleTrainingTest
     {
         [Fact]
@@ -19,7 +10,7 @@ namespace AntWarTest
             int width = 20;
             int height = 20;
             int number_of_ants = 5;
-            List<Type> ants = [typeof(UnitTestAntNorth1)];
+            List<Type> ants = [typeof(TestAntNorth)];
 
             var my_map = new Map(width, height, ants, number_of_ants, PlayMode.SingleTraining);
             Assert.NotNull(my_map);

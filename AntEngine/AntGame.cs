@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace AntEngine
 {
     public class SquareData
@@ -80,7 +82,7 @@ namespace AntEngine
                         home = new AntHome { X = Width / 2, Y = Height / 2 };
                         break;
                     case PlayMode.DuoMatch:
-                        // TO mix placement
+                        // TO DO Fix placement
                         home = new AntHome { X = Width / 2, Y = Height / 2 };
                         break;
 
@@ -135,10 +137,31 @@ namespace AntEngine
 
         public void Add(AntBase a, int x, int y)
         {
+            // move to an empty cell
             if (GridMap[x, y] == null)
+            {
                 GridMap[x, y] = [];
+                GridMap[x, y].Add(a);
+            }
+            // move to an empty list
+            else if (GridMap[x, y].Count== 0)
+            {
+                GridMap[x, y].Add(a);
+            }
+            else
+            {
+                var first = GridMap[x, y][0];
 
-            GridMap[x, y].Add(a);
+                // move to a cell with friends
+                if (first.Name == a.Name)
+                {
+                    GridMap[x, y].Add(a);
+                } // hit
+                else
+                {
+                    GridMap[x, y] = [a];
+                }
+            }
         }
 
         public void PlayRound()
@@ -172,11 +195,13 @@ namespace AntEngine
                 List<AntBase> mates = [];
                 item.Ant.Move(sc, mates);
 
+                int new_x = item.X + item.Ant.DX;
+                int new_y = item.Y + item.Ant.DY;
+
                 List<AntBase> from = GridMap[item.X, item.Y];
-                List<AntBase> to = GridMap[item.X + item.Ant.DX, item.Y + item.Ant.DY];
 
                 from.Remove(item.Ant);
-                GridMap[item.X + item.Ant.DX, item.Y + item.Ant.DY] = [item.Ant];
+                Add(item.Ant, new_x, new_y);
             }
         }
         public void DisplayMap()
@@ -224,7 +249,10 @@ namespace AntEngine
             }
             else
             {
-                return field[0].Index;
+                if (field.Count == 0)
+                    return 0;
+                else
+                    return field[0].Index;
             }
         }
 
@@ -283,19 +311,36 @@ namespace AntEngine
         public required AntBase Ant { get; init; }
     }
 
-    public class TestAnt1 : AntBase
+
+    // simple test ant implementation for used in UnitTest etc.
+    public class TestAntNorth : AntBase
     {
         public override void Move(ScopeData scope, List<AntBase> mates)
         {
-            throw new NotImplementedException();
+            North();
         }
     }
 
-    public class TestAnt2 : AntBase
+    public class TestAntSouth : AntBase
     {
         public override void Move(ScopeData scope, List<AntBase> mates)
         {
-            throw new NotImplementedException();
+            South();
+        }
+    }
+    public class TestAntWest : AntBase
+    {
+        public override void Move(ScopeData scope, List<AntBase> mates)
+        {
+            West();
+        }
+    }
+
+    public class TestAntEast : AntBase
+    {
+        public override void Move(ScopeData scope, List<AntBase> mates)
+        {
+            East();
         }
     }
 
