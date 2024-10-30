@@ -1,9 +1,10 @@
 ﻿using ReactiveUI;
+using System.ComponentModel;
 
 
 namespace ShowGame.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
     {
         public static MainWindowViewModel? Instance { get; private set; }
         private ViewModelBase _contentViewModel;
