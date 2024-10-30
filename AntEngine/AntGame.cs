@@ -52,8 +52,6 @@ namespace AntwarConsoleProgram
         readonly List<AntHome> AntHomes;
         readonly int[,] FoodMap;
 
-        // TODO: Shaq, two dim array of ints with food info
-
         public Map(int width, int height, List<Type> players, int startAnts = 1)
         {
             Width = width;
@@ -119,13 +117,6 @@ namespace AntwarConsoleProgram
                 GridMap[x, y] = [];
 
             GridMap[x, y].Add(a);
-        }
-
-        public void Move_Delta(AntBase ant, int dx, int dy, bool with_food = false)
-        {
-            // find ant in original list of move to new list
-
-
         }
 
         public void PlayRound()
@@ -233,18 +224,7 @@ namespace AntwarConsoleProgram
         public ScopeData CheckForScope(int x, int y)
         {
             ScopeData sc = new();
-            var Scopes = new[] { sc.North, sc.South, sc.Center, sc.West, sc.East };
-            //foreach (var Scope in Scopes)
-            //{
-            //    if (Scope.NumAnts <= 1 || Scope.NumFood <= 1 || Scope.Team <= 1 || Scope.Base == true)
-            //    {
-            //        Console.WriteLine($"NumAnts: {Scope.NumAnts}, NumFood: {Scope.NumFood}, Team: {Scope.Team}, Base: {Scope.Base}");
-            //    }
-            //}
 
-
-
-            //Center
             sc.Center.NumAnts = AntNumber(x, y);
             sc.North.NumAnts = AntNumber(x, y - 1);
             sc.South.NumAnts = AntNumber(x, y + 1);
