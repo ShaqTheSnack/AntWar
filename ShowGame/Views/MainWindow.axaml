@@ -10,5 +10,8 @@
         Title="ShowGame"
 		Content="{Binding ContentViewModel}">
 
+	<Window.Background>
+		<ImageBrush Source="/Assets/AntBackground.png" Stretch="UniformToFill" AlignmentY="Center"/>
+	</Window.Background>
 
 </Window>

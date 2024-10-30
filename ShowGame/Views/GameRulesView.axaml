@@ -6,7 +6,7 @@
 			 x:CompileBindings="False"
              x:Class="ShowGame.Views.GameRulesView">
 	
-	<Grid ShowGridLines="False" Background="Green">
+	<Grid ShowGridLines="False">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition/>
 			<ColumnDefinition/>
@@ -29,7 +29,7 @@
                    HorizontalAlignment="Center" VerticalAlignment="Top"
                    FontWeight="ExtraBold" Foreground="White" FontSize="20">Rules</TextBlock>
 
-		<Border Background="White" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="3">
+		<Border Background="#F3E5AB" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" Grid.RowSpan="3">
 			<ScrollViewer>
 				<StackPanel>
 					<TextBlock FontSize="22" Foreground="Black" TextAlignment="Center" Text="{Binding Rules}"></TextBlock>
@@ -38,9 +38,9 @@
 		</Border>
 
 
-		<!-- BUTTON BACK -->
+		<!-- BUTTON RULES -->
 		<Button Grid.Row="4" Grid.Column="1" Grid.RowSpan="2" Command="{Binding BackBtn}"
                 HorizontalAlignment="Stretch" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                FontWeight="ExtraBold" Background="YellowGreen" Foreground="Black">Back</Button>
+                FontWeight="ExtraBold" Background="#f4ae7a" FontSize="25" Foreground="White">Back</Button>
 	</Grid>
 </UserControl>

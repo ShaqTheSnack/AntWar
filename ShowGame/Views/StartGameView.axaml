@@ -5,6 +5,37 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:CompileBindings="False"
              x:Class="ShowGame.Views.StartGameView">
-	
+
+	<Grid ShowGridLines="False">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+			<ColumnDefinition/>
+			<ColumnDefinition/>
+			<ColumnDefinition/>
+			<ColumnDefinition/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<!-- BUTTON EXIT -->
+		<Button Grid.Row="0" Grid.Column="0" Command="{Binding ExitBtn}"
+				HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+				FontWeight="ExtraBold" Background="#f4ae7a" FontSize="30" Foreground="White">Exit</Button>
+
+		<Canvas Background="White" Grid.ColumnSpan="6" Grid.RowSpan="5" Name="GameCanvas">
+
+
+
+			<Rectangle Fill="Green" Height="5" Width="5"/>
+		</Canvas>
+
+
+	</Grid>
 	
 </UserControl>

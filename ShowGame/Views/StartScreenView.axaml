@@ -5,8 +5,9 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:CompileBindings="False"
              x:Class="ShowGame.Views.StartScreenView">
+	
 
-	<Grid ShowGridLines="False" Background="Green">
+	<Grid ShowGridLines="False">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition/>
 			<ColumnDefinition/>
@@ -22,18 +23,24 @@
 
 		<!-- PAGE TITLE -->
 		<TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+		   HorizontalAlignment="Center" VerticalAlignment="Center"
+		   FontWeight="ExtraBold" FontFamily="Trebuchet MS" Foreground="#90000000" FontSize="72">AntWar</TextBlock>
+		<TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
                    HorizontalAlignment="Center" VerticalAlignment="Center"
-                   FontWeight="ExtraBold" Foreground="White" FontSize="35">AntWar</TextBlock>
+                   FontWeight="ExtraBold" FontFamily="Trebuchet MS" Foreground="#90000000" FontSize="68">AntWar</TextBlock>
+		<TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
+		   HorizontalAlignment="Center" VerticalAlignment="Center"
+		   FontWeight="ExtraBold" FontFamily="Trebuchet MS" Foreground="#FFF" FontSize="70">AntWar</TextBlock>
 
 		<!-- BUTTON STARTGAME -->
 		<Button Grid.Row="2" Grid.Column="1" Grid.RowSpan="1" Command="{Binding StartGamePage}"
                 HorizontalAlignment="Stretch" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                FontWeight="ExtraBold" Background="YellowGreen" Foreground="Black">Start</Button>
+                FontWeight="ExtraBold" Background="#f4ae7a" FontSize="25" Foreground="White">Start</Button>
 
 		<!-- BUTTON RULES -->
 		<Button Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Command="{Binding RulesPage}"
                 HorizontalAlignment="Stretch" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                FontWeight="ExtraBold" Background="YellowGreen" Foreground="Black">Rules</Button>
+                FontWeight="ExtraBold" Background="#f4ae7a" FontSize="25" Foreground="White">Rules</Button>
 	</Grid>
 	
 </UserControl>
