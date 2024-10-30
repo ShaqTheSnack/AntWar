@@ -144,7 +144,7 @@ namespace AntEngine
                 GridMap[x, y].Add(a);
             }
             // move to an empty list
-            else if (GridMap[x, y].Count== 0)
+            else if (GridMap[x, y].Count == 0)
             {
                 GridMap[x, y].Add(a);
             }
@@ -195,8 +195,8 @@ namespace AntEngine
                 List<AntBase> mates = [];
                 item.Ant.Move(sc, mates);
 
-                int new_x = item.X + item.Ant.DX;
-                int new_y = item.Y + item.Ant.DY;
+                int new_x = SafeX(item.X + item.Ant.DX);
+                int new_y = SafeY(item.Y + item.Ant.DY);
 
                 List<AntBase> from = GridMap[item.X, item.Y];
 
@@ -225,6 +225,25 @@ namespace AntEngine
                 }
                 Console.WriteLine();
             }
+        }
+
+        public int SafeX(int x)
+        {
+            if (x < 0)
+                return Width - 1;
+            else if (x == Width)
+                return 0;
+            else
+                return x;
+        }
+        public int SafeY(int y)
+        {
+            if (y < 0)
+                return Height - 1;
+            else if (y == Height)
+                return 0;
+            else
+                return y;
         }
 
         public int AntNumber(int x, int y)
@@ -271,33 +290,34 @@ namespace AntEngine
         }
 
 
+
         public ScopeData CheckForScope(int x, int y)
         {
             ScopeData sc = new();
 
             sc.Center.NumAnts = AntNumber(x, y);
-            sc.North.NumAnts = AntNumber(x, y - 1);
-            sc.South.NumAnts = AntNumber(x, y + 1);
-            sc.East.NumAnts = AntNumber(x + 1, y);
-            sc.West.NumAnts = AntNumber(x - 1, y);
+            sc.North.NumAnts = AntNumber(x, SafeY(y - 1));
+            sc.South.NumAnts = AntNumber(x, SafeY(y + 1));
+            sc.East.NumAnts = AntNumber(SafeX(x + 1), y);
+            sc.West.NumAnts = AntNumber(SafeX(x - 1), y);
 
             sc.Center.NumFood = FoodMap[x, y];
-            sc.North.NumFood = FoodMap[x, y - 1];
-            sc.South.NumFood = FoodMap[x, y + 1];
-            sc.East.NumFood = FoodMap[x + 1, y];
-            sc.West.NumFood = FoodMap[x - 1, y];
+            sc.North.NumFood = FoodMap[x, SafeY(y - 1)];
+            sc.South.NumFood = FoodMap[x, SafeY(y + 1)];
+            sc.East.NumFood = FoodMap[SafeX(x + 1), y];
+            sc.West.NumFood = FoodMap[SafeX(x - 1), y];
 
             sc.Center.Team = AntTeamNumber(x, y);
-            sc.North.Team = AntTeamNumber(x, y - 1);
-            sc.South.Team = AntTeamNumber(x, y + 1);
-            sc.East.Team = AntTeamNumber(x + 1, y);
-            sc.West.Team = AntTeamNumber(x - 1, y);
+            sc.North.Team = AntTeamNumber(x, SafeY(y - 1));
+            sc.South.Team = AntTeamNumber(x, SafeY(y + 1));
+            sc.East.Team = AntTeamNumber(SafeX(x + 1), y);
+            sc.West.Team = AntTeamNumber(SafeX(x - 1), y);
 
             sc.Center.Base = AntHome(x, y);
-            sc.North.Base = AntHome(x, y - 1);
-            sc.South.Base = AntHome(x, y + 1);
-            sc.East.Base = AntHome(x + 1, y);
-            sc.West.Base = AntHome(x - 1, y);
+            sc.North.Base = AntHome(x, SafeY(y - 1));
+            sc.South.Base = AntHome(x, SafeY(y + 1));
+            sc.East.Base = AntHome(SafeX(x + 1), y);
+            sc.West.Base = AntHome(SafeX(x - 1), y);
             return sc;
         }
 

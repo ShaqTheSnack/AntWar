@@ -42,5 +42,39 @@ namespace AntWarTest
 
             my_map.PlayRound();
         }
+
+        [Fact]
+        public void TestSafeX()
+        {
+            List<Type> ants = [typeof(TestAntSouth)];
+
+            var my_map = new Map(5, 5, ants, 1, PlayMode.SingleTraining);
+
+            Assert.Equal(3, my_map.SafeX(3));
+            Assert.Equal(4, my_map.SafeX(4));
+            Assert.Equal(0, my_map.SafeX(5));
+
+            Assert.Equal(1, my_map.SafeX(1));
+            Assert.Equal(0, my_map.SafeX(0));
+            Assert.Equal(4, my_map.SafeX(-1));
+
+        }
+
+        [Fact]
+        public void TestSafeY()
+        {
+            List<Type> ants = [typeof(TestAntSouth)];
+
+            var my_map = new Map(5, 5, ants, 1, PlayMode.SingleTraining);
+
+            Assert.Equal(3, my_map.SafeY(3));
+            Assert.Equal(4, my_map.SafeY(4));
+            Assert.Equal(0, my_map.SafeY(5));
+
+            Assert.Equal(1, my_map.SafeY(1));
+            Assert.Equal(0, my_map.SafeY(0));
+            Assert.Equal(4, my_map.SafeY(-1));
+
+        }
     }
 }
