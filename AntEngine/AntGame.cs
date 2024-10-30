@@ -1,7 +1,5 @@
-﻿using AntwarConsoleProgram;
-using System;
-
-namespace AntwarConsoleProgram
+﻿
+namespace AntEngine
 {
     public class SquareData
     {
@@ -42,17 +40,25 @@ namespace AntwarConsoleProgram
         }
     }
 
+    public enum PlayMode
+    {
+        SingleTraining, // single ant species always placed in the middle of the map. For debugging / unit testing 
+        DuoMatch, // Two ant species placed symmetrically on the map
+        Game, // N species placed randomly on the map
+    }
+
+
     public class Map
     {
-        int Width { get; set; }
-        int Height { get; set; }
+        int Width { get; init; }
+        int Height { get; init; }
 
         readonly List<AntBase>[,] GridMap;
         readonly List<Type> Players;
         readonly List<AntHome> AntHomes;
         readonly int[,] FoodMap;
 
-        public Map(int width, int height, List<Type> players, int startAnts = 1)
+        public Map(int width, int height, List<Type> players, int startAnts = 1, PlayMode mode = PlayMode.Game)
         {
             Width = width;
             Height = height;
@@ -67,9 +73,25 @@ namespace AntwarConsoleProgram
 
             foreach (Type species in Players)
             {
-                var randomWidth = rnd.Next(0, width);
-                var randomHeight = rnd.Next(0, height);
-                var home = new AntHome { X = randomWidth, Y = randomHeight };
+                AntHome home;
+                switch (mode)
+                {
+                    case PlayMode.SingleTraining:
+                        home = new AntHome { X = Width / 2, Y = Height / 2 };
+                        break;
+                    case PlayMode.DuoMatch:
+                        // TO mix placement
+                        home = new AntHome { X = Width / 2, Y = Height / 2 };
+                        break;
+
+                    case PlayMode.Game:
+                        var randomWidth = rnd.Next(0, width);
+                        var randomHeight = rnd.Next(0, height);
+                        home = new AntHome { X = randomWidth, Y = randomHeight };
+                        break;
+                    default:
+                        throw new Exception("Unkown mode: " + mode);
+                }
                 AntHomes.Add(home);
 
                 for (int count = 0; count < startAnts; count++)
@@ -79,7 +101,7 @@ namespace AntwarConsoleProgram
                     {
                         AntBase ant = (AntBase)o;
                         ant.Name = species.Name;
-                        ant.Attach(this, Index);
+                        ant.Index = Index;
                         Add(ant, home.X, home.Y);
                     }
                 }
