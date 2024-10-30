@@ -13,7 +13,7 @@ namespace AntEngine
         static void Main(string[] args)
         {
 
-            var players = new List<Type> { typeof(TestAnt1), typeof(TestAnt2) };
+            var players = new List<Type> { typeof(TestAntNorth), typeof(TestAntSouth) };
             var map = new Map(40, 20, players, startAnts: 1);
             map.DisplayMap();
         }
