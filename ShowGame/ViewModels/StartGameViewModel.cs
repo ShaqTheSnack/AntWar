@@ -16,8 +16,8 @@ namespace ShowGame.ViewModels
         public StartGameViewModel(MainWindowViewModel main)
         {
             this.main = main;
-            var players = new List<Type> { typeof(TestAnt1) };
-            Map = new Map(40, 20, players, startAnts: 1, PlayMode.SingleTraining);
+            //var players = new List<Type> { typeof(TestAnt1) };
+            //Map = new Map(40, 20, players, startAnts: 1, PlayMode.SingleTraining);
         }
 
 
