@@ -29,19 +29,19 @@
             steps = rnd.Next(1, 5);
             if (steps == 1)
             {
-                North();
+                North(true);
             }
             if (steps == 2)
             {
-                South();
+                South(true);
             }
             if (steps == 3)
             {
-                West();
+                West(true);
             }
             if (steps == 4)
             {
-                East();
+                East(true);
             }
 
         }
