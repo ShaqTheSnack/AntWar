@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace AntEngine
 {
@@ -180,7 +181,7 @@ namespace AntEngine
         public void PlayRound()
         {
             RoundNo++;
-            int foodAmountPerRound = 2;
+            int foodAmountPerRound = 1;
             PlaceFood(foodAmountPerRound);
             List<AntItem> ToProcess = [];
 
@@ -201,7 +202,6 @@ namespace AntEngine
             // shuffle list
             ToProcess = ToProcess.OrderBy(x => Guid.NewGuid()).ToList();
 
-
             foreach (AntItem item in ToProcess)
             {
                 ScopeData sc = CheckForScope(item.X, item.Y);
@@ -212,8 +212,21 @@ namespace AntEngine
                 int new_x = SafeX(item.X + item.Ant.DX);
                 int new_y = SafeY(item.Y + item.Ant.DY);
 
-                List<AntBase> from = GridMap[item.X, item.Y];
+                if (FoodMap[item.X, item.Y] > 0)
+                {
+                    if (!item.Ant.WithFood)
+                    {
+                        item.Ant.WithFood = true;
+                        FoodMap[item.X, item.Y]--;
 
+                    }
+                }
+                if (AntHome(item.X, item.Y) && item.Ant.WithFood)
+                {
+                    item.Ant.WithFood = false;
+                }
+
+                List<AntBase> from = GridMap[item.X, item.Y];
                 from.Remove(item.Ant);
                 Add(item.Ant, new_x, new_y);
             }

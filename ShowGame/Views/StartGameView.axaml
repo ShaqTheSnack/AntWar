@@ -32,7 +32,7 @@
 
 
 
-			<Rectangle Fill="Green" Height="5" Width="5"/>
+			<Rectangle Fill="{Binding Color}" Height="5" Width="5"/>
 		</Canvas>
 
 
