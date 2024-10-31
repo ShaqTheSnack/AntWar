@@ -36,11 +36,17 @@ namespace AntWarTest
             int width = 10;
             int height = 10;
             int number_of_ants = 2;
-            List<Type> ants = [typeof(TestAntNorth), typeof(TestAntSouth)];
+            List<Type> ants = [typeof(TestAntNorth)];
 
             var my_map = new Map(width, height, ants, number_of_ants, PlayMode.SingleTraining);
 
+            Assert.Equal(0, my_map.RoundNo);
             my_map.PlayRound();
+
+            Assert.Equal(1, my_map.RoundNo);
+            my_map.PlayRound();
+
+            Assert.Equal(2, my_map.RoundNo);
         }
 
         [Fact]

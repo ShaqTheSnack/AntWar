@@ -54,6 +54,7 @@ namespace AntEngine
     {
         int Width { get; init; }
         int Height { get; init; }
+        public int RoundNo { get; private set; }
 
         readonly List<AntBase>[,] GridMap;
         readonly List<Type> Players;
@@ -62,6 +63,7 @@ namespace AntEngine
 
         public Map(int width, int height, List<Type> players, int startAnts = 1, PlayMode mode = PlayMode.Game)
         {
+            RoundNo = 0;
             Width = width;
             Height = height;
             Players = players;
@@ -73,6 +75,17 @@ namespace AntEngine
             int Index = 0;
             Random rnd = new Random();
 
+            // validate number of ants species
+            if (Players.Count == 0)
+                throw new Exception("Wrong number of ant species!");
+
+            if ((mode == PlayMode.SingleTraining) && (Players.Count != 1))
+                throw new Exception("Wrong number of ant species!");
+
+            else if ((mode == PlayMode.DuoMatch) && (Players.Count != 2))
+                throw new Exception("Wrong number of ant species!");
+
+
             foreach (Type species in Players)
             {
                 AntHome home;
@@ -83,7 +96,7 @@ namespace AntEngine
                         break;
                     case PlayMode.DuoMatch:
                         // TO DO Fix placement
-                        home = new AntHome { X = Width / 2, Y = Height / 2 };
+                        home = new AntHome { X = Width / 3 * (Index + 1), Y = Height / 3 * (Index + 1) };
                         break;
 
                     case PlayMode.Game:
@@ -92,7 +105,7 @@ namespace AntEngine
                         home = new AntHome { X = randomWidth, Y = randomHeight };
                         break;
                     default:
-                        throw new Exception("Unkown mode: " + mode);
+                        throw new Exception("Unknown mode: " + mode);
                 }
                 AntHomes.Add(home);
 
@@ -166,6 +179,7 @@ namespace AntEngine
 
         public void PlayRound()
         {
+            RoundNo++;
             int foodAmountPerRound = 2;
             PlaceFood(foodAmountPerRound);
             List<AntItem> ToProcess = [];
@@ -206,6 +220,7 @@ namespace AntEngine
         }
         public void DisplayMap()
         {
+            Console.WriteLine($"Round: {RoundNo}");
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
