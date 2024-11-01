@@ -62,7 +62,7 @@ namespace AntEngine
         readonly List<AntBase>[,] GridMap;
         readonly List<Type> Players;
         readonly List<AntHome> AntHomes;
-        readonly int[,] FoodMap;
+        public readonly int[,] FoodMap;
 
         public Map(int width, int height, List<Type> players, int startAnts = 1, PlayMode mode = PlayMode.Game)
         {
@@ -127,7 +127,7 @@ namespace AntEngine
             }
         }
 
-        private void PlaceFood(int numberOfFoods)
+        public void PlaceFood(int numberOfFoods)
         {
             Random rnd = new Random();
 
@@ -183,8 +183,7 @@ namespace AntEngine
         public void PlayRound()
         {
             RoundNo++;
-            int foodAmountPerRound = 1;
-            PlaceFood(foodAmountPerRound);
+            PlaceFood(0);
             List<AntItem> ToProcess = [];
 
             for (int x = 0; x < Width; x++)

@@ -10,7 +10,6 @@ namespace wpf_app;
 /// </summary>
 public partial class MainWindow : Window
 {
-
     private const int ImageWidth = 200;
     private const int ImageHeight = 200;
     private WriteableBitmap _bitmap;
@@ -42,10 +41,13 @@ public partial class MainWindow : Window
 
     }
 
+
     private void UpdateBitmap()
     {
         CreateBitmap();
         List<AntBase>? field;
+        int foodAmountPerRound = 1;
+        my_map.PlaceFood(foodAmountPerRound);
 
         for (int y = 0; y < ImageHeight; y++)
         {
@@ -53,10 +55,13 @@ public partial class MainWindow : Window
             {
                 field = my_map.GetAnts(x, y);
 
+                int foodAmount = my_map.FoodMap[x, y];
+
+
                 if ((field != null) && (field.Count > 0))
                 {
-                    byte red = 0;
-                    byte green = 0;
+                    byte red = 255;
+                    byte green = 255;
                     byte blue = 0;
 
                     if (field[0].Index == 0)
@@ -72,9 +77,22 @@ public partial class MainWindow : Window
 
                     SetPixel(x, y, red, green, blue, alpha);
                 }
+
+                if (foodAmount > 0)
+                {
+                    byte black = 0;
+                    byte green = 0;
+                    byte blue = 0;
+
+                    byte alpha = 255;
+
+                    SetPixel(x, y, black, green, blue, alpha);
+                }
             }
         }
     }
+
+    //TODO: Draw Home in
 
     private void SetPixel(int x, int y, byte r, byte g, byte b, byte a)
     {
