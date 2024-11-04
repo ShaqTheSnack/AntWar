@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using AntEngine;
 
 namespace wpf_app;
@@ -12,8 +13,9 @@ public partial class MainWindow : Window
 {
     private const int ImageWidth = 200;
     private const int ImageHeight = 200;
+    private const int TimeBeforeNextRoundMilliseconds = 100;
     private WriteableBitmap _bitmap;
-
+    readonly DispatcherTimer dispatcherTimer;
     private Map my_map;
 
     public MainWindow()
@@ -23,6 +25,11 @@ public partial class MainWindow : Window
 
         InitializeComponent();
         CreateBitmap();
+
+        //This is for the auto timer
+        dispatcherTimer = new DispatcherTimer();
+        dispatcherTimer.Interval = TimeSpan.FromMilliseconds(TimeBeforeNextRoundMilliseconds);
+        dispatcherTimer.Tick += dispatcherTick;
     }
 
     private void CreateBitmap()
@@ -73,7 +80,7 @@ public partial class MainWindow : Window
                         green = (byte)field.Count;
                     }
 
-                    byte alpha = 255; // Full opacity
+                    byte alpha = 255;
 
                     SetPixel(x, y, red, green, blue, alpha);
                 }
@@ -88,6 +95,8 @@ public partial class MainWindow : Window
 
                     SetPixel(x, y, black, green, blue, alpha);
                 }
+
+                //if()
             }
         }
     }
@@ -108,7 +117,27 @@ public partial class MainWindow : Window
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
+        if (!dispatcherTimer.IsEnabled)
+        {
+            dispatcherTimer.Start();
+
+        }
+    }
+
+    public void Start()
+    {
         my_map.PlayRound();
         UpdateBitmap();
     }
+    private void dispatcherTick(object sender, EventArgs e)
+    {
+        Start();
+    }
+
+    private void StopButton_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 }
+
+
