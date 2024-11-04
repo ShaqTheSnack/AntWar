@@ -13,7 +13,7 @@ public partial class MainWindow : Window
 {
     private const int ImageWidth = 200;
     private const int ImageHeight = 200;
-    private const int TimeBeforeNextRoundMilliseconds = 100;
+    private const int TimerIntervalInMs = 100;
     private WriteableBitmap _bitmap;
     readonly DispatcherTimer dispatcherTimer;
     private Map my_map;
@@ -28,7 +28,7 @@ public partial class MainWindow : Window
 
         //This is for the auto timer
         dispatcherTimer = new DispatcherTimer();
-        dispatcherTimer.Interval = TimeSpan.FromMilliseconds(TimeBeforeNextRoundMilliseconds);
+        dispatcherTimer.Interval = TimeSpan.FromMilliseconds(TimerIntervalInMs);
         dispatcherTimer.Tick += dispatcherTick;
     }
 
@@ -53,8 +53,10 @@ public partial class MainWindow : Window
     {
         CreateBitmap();
         List<AntBase>? field;
+        bool homes;
         int foodAmountPerRound = 1;
         my_map.PlaceFood(foodAmountPerRound);
+        
 
         for (int y = 0; y < ImageHeight; y++)
         {
@@ -96,12 +98,22 @@ public partial class MainWindow : Window
                     SetPixel(x, y, black, green, blue, alpha);
                 }
 
-                //if()
+
+                homes = my_map.AntHome(x, y);
+                if (homes == true)
+                {
+                    byte black = 0;
+                    byte green = 0;
+                    byte blue = 255;
+
+                    byte alpha = 255;
+                    
+                    SetPixel(x, y, black, green, blue, alpha);
+                }
             }
         }
     }
 
-    //TODO: Draw Home in
 
     private void SetPixel(int x, int y, byte r, byte g, byte b, byte a)
     {

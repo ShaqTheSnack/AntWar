@@ -213,14 +213,6 @@ namespace AntEngine
                 int new_x = SafeX(item.X + item.Ant.DX);
                 int new_y = SafeY(item.Y + item.Ant.DY);
 
-                //if (GridMap[item.X, item.Y] != null)
-                //{
-                //    bool myTeam = item.Ant.Name(x => x == sc.Center.Team);
-                //    if (!myTeam)
-                //    {
-
-                //    }
-                //}
 
                 if (FoodMap[item.X, item.Y] > 0)
                 {
@@ -232,10 +224,6 @@ namespace AntEngine
                         Debug.WriteLine(FoodMap[new_x, new_y]);
                     }
                 }
-                //if (AntHome(item.X, item.Y) && item.Ant.WithFood)
-                //{
-                //    item.Ant.WithFood = false;
-                //}
 
                 List<AntBase> from = GridMap[item.X, item.Y];
                 from.Remove(item.Ant);
