@@ -64,6 +64,8 @@ namespace AntEngine
         readonly List<AntHome> AntHomes;
         public readonly int[,] FoodMap;
 
+        private Dictionary<int, int> statistics = new Dictionary<int, int>();
+
         public Map(int width, int height, List<Type> players, int startAnts = 1, PlayMode mode = PlayMode.Game)
         {
             RoundNo = 0;
@@ -95,23 +97,23 @@ namespace AntEngine
                 switch (mode)
                 {
                     case PlayMode.SingleTraining:
-                        home = new AntHome { X = Width / 2, Y = Height / 2 };
+                        home = new AntHome { X = Width / 2, Y = Height / 2, Species = species };
                         break;
                     case PlayMode.DuoMatch:
                         // TO DO Fix placement
-                        home = new AntHome { X = Width / 3 * (Index + 1), Y = Height / 3 * (Index + 1) };
+                        home = new AntHome { X = Width / 3 * (Index + 1), Y = Height / 3 * (Index + 1), Species = species };
                         break;
 
                     case PlayMode.Game:
                         var randomWidth = rnd.Next(0, width);
                         var randomHeight = rnd.Next(0, height);
-                        home = new AntHome { X = randomWidth, Y = randomHeight };
+                        home = new AntHome { X = randomWidth, Y = randomHeight, Species = species };
                         break;
                     default:
                         throw new Exception("Unknown mode: " + mode);
                 }
                 AntHomes.Add(home);
-
+                //--
                 for (int count = 0; count < startAnts; count++)
                 {
                     Object? o = Activator.CreateInstance(species);
@@ -180,8 +182,14 @@ namespace AntEngine
             }
         }
 
+        public Dictionary<int, int> GetStatistics()
+        {
+            return statistics;
+        }
+
         public void PlayRound()
         {
+
             RoundNo++;
             PlaceFood(0);
             List<AntItem> ToProcess = [];
@@ -202,9 +210,13 @@ namespace AntEngine
             }
             // shuffle list
             ToProcess = ToProcess.OrderBy(x => Guid.NewGuid()).ToList();
-
+            statistics = new();
             foreach (AntItem item in ToProcess)
             {
+                if(statistics.ContainsKey(item.Ant.Index))
+                    statistics[item.Ant.Index] += 1;
+                else
+                    statistics[item.Ant.Index] = 0;
                 ScopeData sc = CheckForScope(item.X, item.Y);
 
                 List<AntBase> mates = [];
@@ -219,15 +231,31 @@ namespace AntEngine
                     if (item.Ant.WithFood)
                     {
                         FoodMap[item.X, item.Y]--;
-                        FoodMap[new_x, new_y]++;
-                        Debug.WriteLine(FoodMap[item.X, item.Y]);
-                        Debug.WriteLine(FoodMap[new_x, new_y]);
+                        AntHome myHome = AntHomes[item.Ant.Index];
+                        if(myHome.X == new_x && myHome.Y == new_y)
+                        {
+                            Object? o = Activator.CreateInstance(myHome.Species);
+                            if (o != null)
+                            {
+                                AntBase ant = (AntBase)o;
+                                ant.Name = myHome.Species.Name;
+                                ant.Index = item.Ant.Index;
+                                Add(ant, new_x, new_y);
+                            }
+                        }
+                        else
+                        {
+                            FoodMap[new_x, new_y]++;
+                        }
+
                     }
                 }
 
                 List<AntBase> from = GridMap[item.X, item.Y];
                 from.Remove(item.Ant);
                 Add(item.Ant, new_x, new_y);
+
+
             }
         }
         public void DisplayMap()
@@ -395,6 +423,7 @@ namespace AntEngine
     {
         public int X { get; set; }
         public int Y { get; set; }
+        public Type Species { get; set; }
     }
 
     public class Food
