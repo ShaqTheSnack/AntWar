@@ -19,19 +19,19 @@
         abstract public void Move(ScopeData scope, List<AntBase> mates);
 
 
-        public void North(bool with_food = false)
+        public virtual void North(bool with_food = false)
         {
             Move_Delta(0, -1, with_food);
         }
-        public void South(bool with_food = false)
+        public virtual void South(bool with_food = false)
         {
             Move_Delta(0, 1, with_food);
         }
-        public void West(bool with_food = false)
+        public virtual void West(bool with_food = false)
         {
             Move_Delta(-1, 0, with_food);
         }
-        public void East(bool with_food = false)
+        public virtual void East(bool with_food = false)
         {
             Move_Delta(1, 0, with_food);
         }
