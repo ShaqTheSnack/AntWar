@@ -1,8 +1,10 @@
-﻿namespace AntEngine
+﻿using System.Diagnostics;
+
+namespace AntEngine
 {
     class Program
     {
-
+        //Min næste opgave er at lave logikken for en myre der retunere mad
         static void Main(string[] args)
         {
 
@@ -22,7 +24,8 @@
 
     public class ShaquilleAnt : AntBase
     {
-        int steps { get; set; } 
+        int steps { get; set; }
+        SquareData squareData = new();
         public override void Move(ScopeData scope, List<AntBase> mates)
         {
             Random rnd = new Random();
@@ -43,6 +46,44 @@
             {
                 East(true);
             }
+
+        }
+    }
+
+    public class GoBackAnt : AntBase
+    {
+        SquareData squareData = new();
+        int has_no_food = 0;
+        int pos_x = 0;
+        int pos_y = 0;
+        int goal_x = 0;
+        int goal_y = 0;
+        int steps = 0;
+        int step = 0;
+        public override void Move(ScopeData scope, List<AntBase> mates)
+        {
+
+
+            if (has_no_food == scope.Center.NumFood)
+            {
+                North(true);
+                steps++;
+                
+            }
+            else if (has_no_food != scope.Center.NumFood) 
+            {
+                South(true);
+                steps--;
+
+            }
+            else if(steps == step)
+            {
+                South(true);
+
+            }
+
+            
+
 
         }
     }

@@ -18,7 +18,6 @@
 
         abstract public void Move(ScopeData scope, List<AntBase> mates);
 
-
         public void North(bool with_food = false)
         {
             Move_Delta(0, -1, with_food);

@@ -7,8 +7,40 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="800">
     <StackPanel>
-      <Button x:Name="UpdateButton" Content="Play" Width="150" Height="30" Margin="0" Click="Button_Click"/>
-      <Button x:Name="StopButton" Content="Exit" Width="150" Height="30" Margin="0" Click="StopButton_Click"/>
-       <Image x:Name="AntMap" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+
+        <Grid ShowGridLines="false">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Button Grid.Column="5" Grid.Row="1" x:Name="UpdateButton" Content="Play" Width="150" Height="30" Margin="0" Click="Button_Click"/>
+            <Button Grid.Column="5" Grid.Row="2" x:Name="StopButton" Content="Exit" Width="150" Height="30" Margin="0" Click="StopButton_Click"/>
+            <ListView Grid.Column="5" Grid.Row="3" Grid.ColumnSpan="5" x:Name="TeamListView">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Species}"/>
+                        <GridViewColumn Header="Amount" DisplayMemberBinding="{Binding TeamAmount}"/>
+                        <GridViewColumn Header="Color" DisplayMemberBinding="{Binding Color}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            
+        </Grid>
+
+      <Image x:Name="AntMap" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </StackPanel>
 </Window>
