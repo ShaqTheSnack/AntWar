@@ -14,6 +14,10 @@ namespace WPFApp
         private int my_y = 0;
         private int state = 0;
 
+        private int Food_x = 0;
+        private int Food_y = 0;
+
+
 
         // states:
 
@@ -50,6 +54,11 @@ namespace WPFApp
         {
             my_x += 1;
             base.East(with_food);
+        }
+
+        public void MoveTo(int x, int y)
+        {
+
         }
 
         public override void Move(ScopeData scope, List<AntBase> mates)
