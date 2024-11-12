@@ -62,7 +62,7 @@ namespace AntEngine
         readonly List<AntBase>[,] GridMap;
         readonly List<Type> Players;
         readonly List<AntHome> AntHomes;
-        readonly int[,] FoodMap;
+        public readonly int[,] FoodMap;
 
         public Map(int width, int height, List<Type> players, int startAnts = 1, PlayMode mode = PlayMode.Game)
         {
@@ -127,7 +127,7 @@ namespace AntEngine
             }
         }
 
-        private void PlaceFood(int numberOfFoods)
+        public void PlaceFood(int numberOfFoods)
         {
             Random rnd = new Random();
 
@@ -183,8 +183,7 @@ namespace AntEngine
         public void PlayRound()
         {
             RoundNo++;
-            int foodAmountPerRound = 1;
-            PlaceFood(foodAmountPerRound);
+            PlaceFood(0);
             List<AntItem> ToProcess = [];
 
             for (int x = 0; x < Width; x++)
@@ -214,14 +213,6 @@ namespace AntEngine
                 int new_x = SafeX(item.X + item.Ant.DX);
                 int new_y = SafeY(item.Y + item.Ant.DY);
 
-                //if (GridMap[item.X, item.Y] != null)
-                //{
-                //    bool myTeam = item.Ant.Name(x => x == sc.Center.Team);
-                //    if (!myTeam)
-                //    {
-
-                //    }
-                //}
 
                 if (FoodMap[item.X, item.Y] > 0)
                 {
@@ -233,10 +224,6 @@ namespace AntEngine
                         Debug.WriteLine(FoodMap[new_x, new_y]);
                     }
                 }
-                //if (AntHome(item.X, item.Y) && item.Ant.WithFood)
-                //{
-                //    item.Ant.WithFood = false;
-                //}
 
                 List<AntBase> from = GridMap[item.X, item.Y];
                 from.Remove(item.Ant);
