@@ -33,7 +33,6 @@ namespace wpf_app
 
         public override void West(bool with_food = false)
         {
-            logger.Info($"{Index}, {Name}, {my_x}, {my_y}");
             my_x -= 1;
             base.West(with_food);
 
@@ -58,11 +57,28 @@ namespace wpf_app
 
         public void MoveTo(int x, int y)
         {
+            if (my_x-x > 0)
+            {
+                West();
+            }
+            else if (my_x - x < 0)
+            {
+                East();
+            }
+            else if (my_y - y > 0)
+            {
+                South();
+            }
+            else if (my_x - x < 0)
+            {
+                North();
+            }
 
         }
 
         public override void Move(ScopeData scope, List<AntBase> mates)
         {
+            logger.Info($"{Index}, {Name}, {my_x}, {my_y}, {state}");
             if (KillIfPossible(scope)) return;
 
             // state changes
