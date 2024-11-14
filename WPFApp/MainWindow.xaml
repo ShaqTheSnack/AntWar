@@ -29,15 +29,16 @@
 
             <Button Grid.Column="5" Grid.Row="1" x:Name="UpdateButton" Content="Play" Width="150" Height="30" Margin="0" Click="Button_Click"/>
             <Button Grid.Column="5" Grid.Row="2" x:Name="StopButton" Content="Exit" Width="150" Height="30" Margin="0" Click="StopButton_Click"/>
-            <ListView Grid.Column="5" Grid.Row="3" Grid.ColumnSpan="5" x:Name="TeamListView">
+            <ListView Grid.Column="5" Grid.Row="3" Grid.ColumnSpan="5" x:Name="TeamListView" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                 <ListView.View>
-                    <GridView>
+                    <GridView ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                         <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Species}"/>
                         <GridViewColumn Header="Amount" DisplayMemberBinding="{Binding TeamAmount}"/>
                         <GridViewColumn Header="Color" DisplayMemberBinding="{Binding Color}"/>
                     </GridView>
                 </ListView.View>
             </ListView>
+            
             
         </Grid>
 
