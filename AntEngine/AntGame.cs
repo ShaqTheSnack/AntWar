@@ -219,7 +219,7 @@ namespace AntEngine
                     statistics[item.Ant.Index] = 0;
                 ScopeData sc = CheckForScope(item.X, item.Y);
 
-                List<AntBase> mates = [];
+                List<AntBase> mates = GridMap[item.X, item.Y].Where(a => a != item.Ant).ToList();
                 item.Ant.Move(sc, mates);
 
                 int new_x = SafeX(item.X + item.Ant.DX);
