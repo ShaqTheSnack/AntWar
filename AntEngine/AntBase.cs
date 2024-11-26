@@ -3,8 +3,8 @@
     public abstract class AntBase
     {
         public int Index { set; get; }
-        public int DX { set; get; }
-        public int DY { set; get; }
+        public int DX { private set; get; }
+        public int DY { private set; get; }
         public bool WithFood { set; get; }
 
         public String Name { get; set; } = String.Empty;

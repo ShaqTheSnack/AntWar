@@ -129,6 +129,8 @@ namespace AntEngine
             }
         }
 
+        // Lav det bruger venligt
+        // Lav en metode til at maden bliver placeret et bestemt sted
         public void PlaceFood(int numberOfFoods)
         {
             Random rnd = new Random();
@@ -142,6 +144,21 @@ namespace AntEngine
                 FoodMap[foodX, foodY] = rnd.Next(5, 10);
             }
         }
+
+        public void PlaceFoodTest(int numberOfFoods, int foodPosX, int foodPosY)
+        {
+            Random rnd = new Random();
+
+            for (int i = 0; i < numberOfFoods; i++)
+            {
+                int foodX, foodY;
+
+                foodX = foodPosX;
+                foodY = foodPosY;
+                FoodMap[foodX, foodY] = rnd.Next(5, 10);
+            }
+        }
+
 
 
         public List<AntBase>? GetAnts(int x, int y)
