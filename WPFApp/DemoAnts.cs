@@ -12,24 +12,6 @@ namespace WPFApp
 
     namespace AntEngine
     {
-        public class AntDiagonal : AntBase
-        {
-            private bool goingNorthEast = true;
-            public override void Move(ScopeData scope, List<AntBase> mates)
-            {
-                if (goingNorthEast)
-                {
-                    DX = 1;
-                    DY = -1;
-                }
-                else
-                {
-                    DX = -1;
-                    DY = 1;
-                }
-                goingNorthEast = !goingNorthEast;
-            }
-        }
 
         public class AntZigZag : AntBase
         {
@@ -126,6 +108,8 @@ namespace WPFApp
                 }
             }
         }
+
+
 
     }
 

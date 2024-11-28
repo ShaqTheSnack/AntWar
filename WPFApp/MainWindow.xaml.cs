@@ -7,6 +7,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using AntEngine;
+using WPFApp;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace wpf_app;
 
@@ -25,10 +27,33 @@ public partial class MainWindow : Window
     private Map my_map;
     private AntHome antHome;
     private List<TeamList> TeamsList = new();
+    enum GameMode
+    {
+        Training, //This is for testing
+        DuoMatch, //This is for a 1 v 1
+        Game      //This is for a PVP for many ants
+    }
+    GameMode gameMode = GameMode.DuoMatch; //<---- Write GameMode Here
     public MainWindow()
     {
-        players = new List<Type> { typeof(GoBackAnt), typeof(TestAntSouth) };
-        my_map = new Map(ImageWidth, ImageHeight, players, startAnts: 1, PlayMode.DuoMatch);
+        switch (gameMode)
+        {
+            case GameMode.Training:
+                players = new List<Type> { typeof(GoBackAnt) };
+                my_map = new Map(ImageWidth, ImageHeight, players, startAnts: 1, PlayMode.SingleTraining);
+                break;
+
+            case GameMode.DuoMatch:
+                players = new List<Type> { typeof(RonnieColemant), typeof(GoBackAnt) };
+                my_map = new Map(ImageWidth, ImageHeight, players, startAnts: 1, PlayMode.DuoMatch);
+                break;
+
+            case GameMode.Game:
+                players = new List<Type> { typeof(RonnieColemant), typeof(GoBackAnt) };
+                my_map = new Map(ImageWidth, ImageHeight, players, startAnts: 1, PlayMode.Game);
+                break;
+
+        }
 
         InitializeComponent();
         CreateBitmap();
@@ -57,14 +82,40 @@ public partial class MainWindow : Window
 
     }
 
-
+    private int Rounds {  get; set; }
     private void UpdateBitmap()
     {
         CreateBitmap();
+        Rounds++;
         List<AntBase>? field;
         bool homes;
-        int foodAmountPerRound = 10; // FOOD PER ROUND
-        my_map.PlaceFood(foodAmountPerRound);
+        int foodAmountPerRound = 0;
+
+        switch (gameMode)
+        {
+            case GameMode.Training:
+                foodAmountPerRound = 1; // FOOD PER ROUND
+                my_map.PlaceFoodTest(foodAmountPerRound, 90, 90);
+                break;
+
+            case GameMode.DuoMatch:
+                if (Rounds % 2 == 0)
+                {
+                    foodAmountPerRound = 50; // FOOD PER ROUND
+                    my_map.PlaceFood(foodAmountPerRound);
+                }
+                break;
+
+            case GameMode.Game:
+                if (Rounds % 2 == 0)
+                {
+                    foodAmountPerRound = 2; // FOOD PER ROUND
+                    my_map.PlaceFood(foodAmountPerRound);
+                }
+                break;
+        }
+
+
         var stat = my_map.GetStatistics();
         TeamListView.Items.Clear();
         for (int player = 0; player < players.Count; player++)

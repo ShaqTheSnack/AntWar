@@ -10,7 +10,7 @@ namespace AntEngine
 
             //var players = new List<Type> { typeof(TestAntNorth), typeof(TestAntSouth) };
             //var players = new List<Type> { typeof(TestAntNorth)};
-            var players = new List<Type> { typeof(ShaquilleAnt) };
+            var players = new List<Type> { typeof(RandomAnt) };
 
             var map = new Map(10, 10, players, startAnts: 1, PlayMode.SingleTraining);
             for (int count = 0; count < 40; count++)
@@ -22,7 +22,7 @@ namespace AntEngine
         }
     }
 
-    public class ShaquilleAnt : AntBase
+    public class RandomAnt : AntBase
     {
         int steps { get; set; }
         SquareData squareData = new();
@@ -54,10 +54,6 @@ namespace AntEngine
     {
         SquareData squareData = new();
         int has_no_food = 0;
-        int pos_x = 0;
-        int pos_y = 0;
-        int goal_x = 0;
-        int goal_y = 0;
         int steps = 0;
         int step = 0;
         public override void Move(ScopeData scope, List<AntBase> mates)
@@ -66,25 +62,16 @@ namespace AntEngine
 
             if (has_no_food == scope.Center.NumFood)
             {
-                North(true);
+                North(false);
                 steps++;
                 
             }
             else if (has_no_food != scope.Center.NumFood) 
             {
-                South(true);
+                South(false);
                 steps--;
 
             }
-            else if(steps == step)
-            {
-                South(true);
-
-            }
-
-            
-
-
         }
     }
 }

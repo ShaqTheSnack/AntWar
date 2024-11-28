@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -108,12 +109,14 @@ namespace WPFApp
             else
             {
                 MoveTowards(0, 0);
+                
             }
         }
 
         public void ReturnToFood()
         {
             MoveTowards(FoodX, FoodY);
+
         }
 
         private void Explore(ScopeData scope)
@@ -162,6 +165,7 @@ namespace WPFApp
 
                 case AntState.ReturningToFood:
                     ReturnToFood();
+
                     if (X == FoodX && Y == FoodY)
                     {
                         if (scope.Center.NumFood > 0)
@@ -178,6 +182,7 @@ namespace WPFApp
                         }
 
                     }
+
                     break;
 
                 case AntState.ExploreMap:
@@ -217,5 +222,19 @@ namespace WPFApp
                     break;
             }
         }
+
+        //public override void Move(ScopeData scope, List<AntBase> mates)
+        //{
+        //    if (scope.Center.NumFood > 0 && mates.Count > 3)
+        //    {
+        //        // Hvis der er mad til stede og nok allierede er i nærheden, så bliv og forsvar maden
+        //        Stay();
+        //    }
+        //    else
+        //    {
+        //        // Ellers gør noget andet
+        //        North();
+        //    }
+        //}
     }
 }
