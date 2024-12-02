@@ -11,9 +11,23 @@ namespace AntWarTest
             int height = 20;
             int number_of_ants = 5;
             List<Type> ants = [typeof(TestAntNorth)];
+            List<Position> PositionXY = new List<Position>();
+            PositionXY.AddRange([new Position { x = 1, y = 1 }, new Position { x = 5, y = 6 }]);
 
-            var my_map = new Map(width, height, ants, number_of_ants, PlayMode.SingleTraining);
+            var my_map = new Map(width, height, ants, number_of_ants, PlayMode.SingleTraining, PositionXY);
             Assert.NotNull(my_map);
+
+            // Place food at positions for PositionXY
+            foreach (var pos in PositionXY)
+            {
+                my_map.PlaceFoodTest(1, pos.x, pos.y);
+            }
+
+            // Check food placement is correct
+            foreach (var pos in PositionXY)
+            {
+                Assert.True(my_map.FoodMap[pos.x, pos.y] > 0, $"Food was not placed at ({pos.x}, {pos.y}).");
+            }
 
             for (int count = 0; count < 5; count++)
             {
@@ -24,7 +38,6 @@ namespace AntWarTest
                 my_map.PlayRound();
             }
         }
-
 
         [Fact]
         public void TestLoopMapSouth()
@@ -93,6 +106,5 @@ namespace AntWarTest
             Assert.NotNull(field);
             Assert.Equal(number_of_ants, field.Count);
         }
-
     }
 }
