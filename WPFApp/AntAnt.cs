@@ -12,6 +12,15 @@ public class AntAnt : AntBase
     private AntState state = AntState.RandomMovement;
     private (int x, int y) targetPOS = (0, 0);
     private int MoveInTurnCounter = 0;
+    private int AmoutFoodCollected = 0;
+    
+    private enum AntState
+    {
+        RandomMovement,
+        GoToFood,
+        GoToBase,
+        explore,
+    }
 
     public override void Move(ScopeData scope, List<AntBase> mates)
     {
@@ -38,6 +47,9 @@ public class AntAnt : AntBase
                 break;
             case AntState.GoToBase:
                 GoToBase();
+                break;
+            case AntState.explore:
+                Explore();
                 break;
         }
 
@@ -90,6 +102,7 @@ public class AntAnt : AntBase
         if (!GoToTargetPOS(true))
             return;
 
+        AmoutFoodCollected++;
         if (foodList.Count == 0)
         {
             state = AntState.RandomMovement;
@@ -97,9 +110,26 @@ public class AntAnt : AntBase
             return;
         }
 
+        if (AmoutFoodCollected >= 5)
+        {
+            state = AntState.explore;
+            return;
+        }
+
         var closestFood = foodList.OrderBy(o => o.distanceFromBase).First();
         targetPOS = (closestFood.x, closestFood.y);
         state = AntState.GoToFood;
+    }
+
+    private void Explore()
+    {
+        if (GoToTargetPOS())
+        {
+            targetPOS.x++;
+            targetPOS.y++;
+        }
+
+        GoToTargetPOS();
     }
 
     private bool GoToTargetPOS(bool withFood = false)
@@ -120,16 +150,16 @@ public class AntAnt : AntBase
 
     private void LookForFood(ScopeData scope)
     {
-        if (scope.North.NumFood > 4)
+        if (scope.North.NumFood > 4 && scope.North.NumAnts == 0)
             FoundFood(scope.North, (0, 1));
 
-        if (scope.South.NumFood > 4)
+        if (scope.South.NumFood > 4 && scope.South.NumAnts == 0)
             FoundFood(scope.South, (0, -1));
 
-        if (scope.East.NumFood > 4)
+        if (scope.East.NumFood > 4 && scope.East.NumAnts == 0)
             FoundFood(scope.East, (1, 0));
 
-        if (scope.West.NumFood > 4)
+        if (scope.West.NumFood > 4 && scope.West.NumAnts == 0)
             FoundFood(scope.West, (-1, 0));
     }
 
@@ -144,7 +174,10 @@ public class AntAnt : AntBase
         var distanceFromBase = Math.Abs(foodPOS.x) + Math.Abs(foodPOS.y);
         foodList.Add((foodPOS.x, foodPOS.y, square.NumFood, distanceFromBase));
         if (state == AntState.RandomMovement)
+        {
             state = AntState.GoToFood;
+            targetPOS = foodPOS;
+        }
     }
 
     private void FindClosestFood()
@@ -177,12 +210,5 @@ public class AntAnt : AntBase
         currentPOS.x -= 1;
         MoveInTurnCounter++;
         base.West(with_food);
-    }
-
-    private enum AntState
-    {
-        RandomMovement,
-        GoToFood,
-        GoToBase
     }
 }
