@@ -89,7 +89,7 @@ public partial class MainWindow : Window
         Rounds++;
         List<AntBase>? field;
         bool homes;
-        int foodAmountPerRound = 0;
+        int foodAmountPerRound;
 
         switch (gameMode)
         {
@@ -101,7 +101,7 @@ public partial class MainWindow : Window
             case GameMode.DuoMatch:
                 if (Rounds % 2 == 0)
                 {
-                    foodAmountPerRound = 50; // FOOD PER ROUND
+                    foodAmountPerRound = 1; // FOOD PER ROUND                        
                     my_map.PlaceFood(foodAmountPerRound);
                 }
                 break;
