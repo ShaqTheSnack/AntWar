@@ -51,7 +51,11 @@ namespace AntEngine
         DuoMatch, // Two ant species placed symmetrically on the map
         Game, // N species placed randomly on the map
     }
-
+    public class Position
+    {
+        public int x;
+        public int y;
+    }
 
     public class Map
     {
@@ -63,10 +67,12 @@ namespace AntEngine
         readonly List<Type> Players;
         readonly List<AntHome> AntHomes;
         public readonly int[,] FoodMap;
+        
+        
 
         private Dictionary<int, int> statistics = new Dictionary<int, int>();
 
-        public Map(int width, int height, List<Type> players, int startAnts = 1, PlayMode mode = PlayMode.Game)
+        public Map(int width, int height, List<Type> players, int startAnts = 1, PlayMode mode = PlayMode.SingleTraining, List<Position>? predefinedPositions = null)
         {
             RoundNo = 0;
             Width = width;
@@ -74,7 +80,6 @@ namespace AntEngine
             Players = players;
             AntHomes = new List<AntHome>();
             FoodMap = new int[Width, Height];
-
             GridMap = new List<AntBase>[Width, Height];
 
             int Index = 0;
@@ -113,7 +118,6 @@ namespace AntEngine
                         throw new Exception("Unknown mode: " + mode);
                 }
                 AntHomes.Add(home);
-                //--
                 for (int count = 0; count < startAnts; count++)
                 {
                     Object? o = Activator.CreateInstance(species);
@@ -129,8 +133,6 @@ namespace AntEngine
             }
         }
 
-        // Lav det bruger venligt
-        // Lav en metode til at maden bliver placeret et bestemt sted
         public void PlaceFood(int numberOfFoods)
         {
             Random rnd = new Random();
