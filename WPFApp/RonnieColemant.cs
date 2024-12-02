@@ -36,7 +36,7 @@ namespace WPFApp
         bool Missions { get; set; }
         bool FoundEnemy { get; set; }
         bool GotHomeAndReadyToDefend { get; set; } = false;
-
+        //(int r, int w) g = (1,2);
 
 
 
@@ -205,7 +205,7 @@ namespace WPFApp
 
                 case AntState.DefendBaseMission:
                     if (GotHomeAndReadyToDefend == false)
-                    {
+                    { 
                         GoHome();
                     }
                     if (X == 0 && Y == 0)
