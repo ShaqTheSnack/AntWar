@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:wpf_app"
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="800">
-    <StackPanel>
+    <StackPanel Background="#FF526F4C">
 
 
         <Grid ShowGridLines="false">

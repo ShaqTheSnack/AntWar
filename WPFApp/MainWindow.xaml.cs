@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Threading;
 using AntEngine;
 using WPFApp;
@@ -21,6 +22,8 @@ public partial class MainWindow : Window
     private const int ImageWidth = 200;
     private const int ImageHeight = 200;
     private const int TimerIntervalInMs = 100;
+    private const int FinishRounds = 100; //Choose rounds before the game ends
+    private int RoundCount;
     private WriteableBitmap _bitmap;
     readonly DispatcherTimer dispatcherTimer;
     private List<Type> players;
@@ -39,17 +42,17 @@ public partial class MainWindow : Window
         switch (gameMode)
         {
             case GameMode.Training:
-                players = new List<Type> { typeof(GoBackAnt) };
+                players = new List<Type> { typeof(RonnieColemant) }; //<---- Add your ant here
                 my_map = new Map(ImageWidth, ImageHeight, players, startAnts: 1, PlayMode.SingleTraining);
                 break;
 
             case GameMode.DuoMatch:
-                players = new List<Type> { typeof(RonnieColemant), typeof(GoBackAnt) };
+                players = new List<Type> { typeof(RonnieColemant), typeof(GoBackAnt) }; //<---- Add your ant here
                 my_map = new Map(ImageWidth, ImageHeight, players, startAnts: 1, PlayMode.DuoMatch);
                 break;
 
             case GameMode.Game:
-                players = new List<Type> { typeof(RonnieColemant), typeof(GoBackAnt) };
+                players = new List<Type> { typeof(RonnieColemant), typeof(GoBackAnt) }; //<---- Add your ant here
                 my_map = new Map(ImageWidth, ImageHeight, players, startAnts: 1, PlayMode.Game);
                 break;
 
@@ -101,7 +104,7 @@ public partial class MainWindow : Window
             case GameMode.DuoMatch:
                 if (Rounds % 2 == 0)
                 {
-                    foodAmountPerRound = 1; // FOOD PER ROUND                        
+                    foodAmountPerRound = 50; // FOOD PER ROUND                        
                     my_map.PlaceFood(foodAmountPerRound);
                 }
                 break;
@@ -212,6 +215,13 @@ public partial class MainWindow : Window
     {
         my_map.PlayRound();
         UpdateBitmap();
+        my_map.GameRounds = FinishRounds;
+        RoundCount++;
+
+        if (FinishRounds == RoundCount)
+        {
+            GameEnds();
+        }
     }
     private void dispatcherTick(object sender, EventArgs e)
     {
@@ -221,6 +231,17 @@ public partial class MainWindow : Window
     private void StopButton_Click(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+
+
+    private void GameEnds()
+    {
+        WinnerPage winnerWindow = new WinnerPage(my_map.WinnerList);
+
+        winnerWindow.Show();
+
+        this.Close();
     }
 }
 

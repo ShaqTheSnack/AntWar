@@ -1,0 +1,49 @@
+﻿<Window x:Class="WPFApp.WinnerPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFApp"
+        mc:Ignorable="d"
+        Title="WinnerPage" Height="800" Width="800">
+    <Grid Background="#d3d3d3">
+        <TextBlock Text="Winner Scoreboard" FontSize="24" FontWeight="Bold" 
+                   HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10"/>
+
+        <Border Background="#333333  " BorderBrush="DarkSeaGreen" BorderThickness="3" CornerRadius="15" Margin="60,60">
+            <ListBox Name="WinnerListBox" 
+             Width="600" 
+             Height="600" 
+             FontWeight="ExtraBold" 
+             FontSize="16" 
+             Foreground="White"
+             Background="#FF526F4C"
+             Padding="10"
+             HorizontalAlignment="Center"
+             VerticalAlignment="Center"
+             ScrollViewer.VerticalScrollBarVisibility="Auto">
+
+                <!-- Custom ListBoxItem Style -->
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="8"/>
+                        <Setter Property="Margin" Value="5"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="#333"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#333"/>
+                                <Setter Property="Foreground" Value="#333"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </Border>
+
+    </Grid>
+</Window>

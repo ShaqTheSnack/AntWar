@@ -62,13 +62,13 @@ namespace AntEngine
 
             if (has_no_food == scope.Center.NumFood)
             {
-                North(false);
+                North(true);
                 steps++;
                 
             }
             else if (has_no_food != scope.Center.NumFood) 
             {
-                South(false);
+                South(true);
                 steps--;
 
             }

@@ -1,146 +1,44 @@
 ﻿using AntEngine;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls.Primitives;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace WPFApp
 {
     public class RonnieColemant : AntBase
     {
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
+        private static int AntCount { get; set; } = 0;
+        private readonly Random rnd = new Random();
+
+        private int myCount;
+        private int X { get; set; }
+        private int Y { get; set; }
+        private int FoodX { get; set; }
+        private int FoodY { get; set; }
+        private bool HasFood { get; set; } = false;
+        private int CollectedFoodTwice { get; set; } = 0;
+        private bool GotHomeAndReadyToDefend { get; set; } = false;
+        private int DefendSteps { get; set; } = 0;
+        private bool DefendSetup { get; set; } = false;
+
+        private enum AntState
+        {
+            SearchingFood,
+            ReturningHome,
+            ReturningToFood,
+            HandOutMissions,
+            AttackMission,
+            DefendBaseMission,
+            SpyMission
+        }
+
+        private AntState currentState = AntState.SearchingFood;
 
         public RonnieColemant()
         {
             myCount = AntCount++;
-        }
-
-
-        static int AntCount { get; set; } = 0;
-        int myCount { get; set; }
-
-        Random rnd = new Random();
-
-        int X { get; set; }
-        int Y { get; set; }
-        int FoodX { get; set; }
-        int FoodY { get; set; }
-        bool HasFood { get; set; } = false;
-        bool Missions { get; set; }
-        bool FoundEnemy { get; set; }
-        bool GotHomeAndReadyToDefend { get; set; } = false;
-        //(int r, int w) g = (1,2);
-
-
-
-        enum AntState
-        {
-            //Food Collecting
-            SearchingFood,
-            ReturningHome,
-            ReturningToFood,
-
-            //Explore and assign
-            ExploreMap,
-
-            //Missions
-            AttackMission,
-            DefendBaseMission,
-            AttackBaseMission,
-            SpyMission
-
-
-        }
-        AntState currentState = AntState.SearchingFood;
-
-        public void RandomMovement(ScopeData scope)
-        {
-            if (scope.Center.NumFood > 0)
-            {
-                HasFood = true;
-                FoodX = X;
-                FoodY = Y;
-                Stay(true);
-            }
-            else if (scope.North.NumFood > 0 && !HasFood) { North(true); Y--; }
-            else if (scope.South.NumFood > 0 && !HasFood) { South(true); Y++; }
-            else if (scope.East.NumFood > 0 && !HasFood) { East(true); X++; }
-            else if (scope.West.NumFood > 0 && !HasFood) { West(true); X--; }
-            else if (!HasFood) { RandomMove(); }
-        }
-
-        private void RandomMove()
-        {
-            int direction = rnd.Next(0, 4);
-            switch (direction)
-            {
-                case 0: North(true); Y--; break;
-                case 1: South(true); Y++; break;
-                case 2: East(true); X++; break;
-                case 3: West(true); X--; break;
-            }
-        }
-
-        private void MoveTowards(int targetX, int targetY)
-        {
-            if (X > targetX) { West(true); X--; }
-            else if (X < targetX) { East(true); X++; }
-            else if (Y > targetY) { North(true); Y--; }
-            else if (Y < targetY) { South(true); Y++; }
-        }
-
-
-
-        public void GoHome()
-        {
-            if (X == 0 && Y == 0)
-            {
-                HasFood = false;
-                FoodX = 0;
-                FoodY = 0;
-            }
-            else
-            {
-                MoveTowards(0, 0);
-                
-            }
-        }
-
-        public void ReturnToFood()
-        {
-            MoveTowards(FoodX, FoodY);
-
-        }
-
-        private void Explore(ScopeData scope)
-        {
-
-        }
-
-        public void AttackAnts(ScopeData scope)
-        {
-            if (scope.North.NumAnts > 0 && scope.North.Team != Index) North();
-            else if (scope.South.NumAnts > 0 && scope.South.Team != Index) South();
-            else if (scope.East.NumAnts > 0 && scope.East.Team != Index) East();
-            else if (scope.West.NumAnts > 0 && scope.West.Team != Index) West();
-            else North();
-        }
-
-        public void DefendBase(ScopeData scope)
-        {
-            South(true);
-        }
-
-        public void SpyOnAnts(ScopeData scope)
-        {
-            West(true);
         }
 
         public override void Move(ScopeData scope, List<AntBase> mates)
@@ -148,55 +46,41 @@ namespace WPFApp
             switch (currentState)
             {
                 case AntState.SearchingFood:
-                    RandomMovement(scope);
-                    if (HasFood)
-                    {
-                        currentState = AntState.ReturningHome;
-                    }
+                    SearchForFood(scope);
                     break;
 
                 case AntState.ReturningHome:
                     GoHome();
-                    if (X == 0 && Y == 0)
+                    if (AtHomeBase())
                     {
-                        currentState = AntState.ReturningToFood;
+                        HasFood = false;
+                        CollectedFoodTwice++;
+                        currentState = CollectedFoodTwice >= 3
+                            ? AntState.HandOutMissions
+                            : AntState.ReturningToFood;
                     }
                     break;
 
                 case AntState.ReturningToFood:
                     ReturnToFood();
-
-                    if (X == FoodX && Y == FoodY)
+                    if (AtFoodLocation())
                     {
                         if (scope.Center.NumFood > 0)
                         {
                             currentState = AntState.SearchingFood;
                         }
-                        if (scope.Center.NumFood == 0 && X == FoodX && Y == FoodY)
+                        else
                         {
                             HasFood = false;
+                            currentState = CollectedFoodTwice >= 3
+                                ? AntState.HandOutMissions
+                                : AntState.SearchingFood;
                         }
-                        if (!HasFood)
-                        {
-                            currentState = AntState.ExploreMap;
-                        }
-
                     }
-
                     break;
 
-                case AntState.ExploreMap:
-                    Explore(scope);
-                    if (Missions == true)
-                    {
-                        int assignMissions = rnd.Next(0, 3);
-                        switch (assignMissions)
-                        {
-                            case 0: currentState = AntState.AttackMission; break;
-                            case 1: currentState = AntState.DefendBaseMission; break;
-                            case 2: currentState = AntState.SpyMission; break;
-                        }
-                    }
+                case AntState.HandOutMissions:
+                    AssignMissions();
                     break;
 
                 case AntState.AttackMission:
@@ -204,37 +88,149 @@ namespace WPFApp
                     break;
 
                 case AntState.DefendBaseMission:
-                    if (GotHomeAndReadyToDefend == false)
-                    { 
-                        GoHome();
-                    }
-                    if (X == 0 && Y == 0)
-                    {
-                        GotHomeAndReadyToDefend = true;
-                        DefendBase(scope);
-                    }
-
+                    DefendBase(scope);
                     break;
 
                 case AntState.SpyMission:
-
-                    SpyOnAnts(scope);
+                    SpyOnAnts();
                     break;
             }
         }
 
-        //public override void Move(ScopeData scope, List<AntBase> mates)
-        //{
-        //    if (scope.Center.NumFood > 0 && mates.Count > 3)
-        //    {
-        //        // Hvis der er mad til stede og nok allierede er i nærheden, så bliv og forsvar maden
-        //        Stay();
-        //    }
-        //    else
-        //    {
-        //        // Ellers gør noget andet
-        //        North();
-        //    }
-        //}
+        private void SearchForFood(ScopeData scope)
+        {
+            if (scope.Center.NumFood > 0)
+            {
+                HasFood = true;
+                FoodX = X;
+                FoodY = Y;
+                Stay(true);
+                currentState = AntState.ReturningHome;
+            }
+            else
+            {
+                MoveTowardsFood(scope);
+            }
+        }
+
+        private void MoveTowardsFood(ScopeData scope)
+        {
+            if (scope.North.NumFood > 0) { MoveNorth(); }
+            else if (scope.South.NumFood > 0) { MoveSouth(); }
+            else if (scope.East.NumFood > 0) { MoveEast(); }
+            else if (scope.West.NumFood > 0) { MoveWest(); }
+            else { RandomMove(); }
+        }
+
+        private void RandomMove()
+        {
+            switch (rnd.Next(4))
+            {
+                case 0: MoveNorth(); break;
+                case 1: MoveSouth(); break;
+                case 2: MoveEast(); break;
+                case 3: MoveWest(); break;
+            }
+        }
+
+        private void GoHome()
+        {
+            MoveTowards(0, 0);
+        }
+
+        private void ReturnToFood()
+        {
+            MoveTowards(FoodX, FoodY);
+        }
+
+        private void AssignMissions()
+        {
+            int mission = rnd.Next(0, 3);
+            currentState = mission switch
+            {
+                //0 => AntState.AttackMission,
+                //1 => AntState.SpyMission,
+                _ => AntState.DefendBaseMission, //This is the default case
+            };
+        }
+
+        private void AttackAnts(ScopeData scope)
+        {
+            if (scope.North.NumAnts > 0 && scope.North.Team != Index) MoveNorth();
+            else if (scope.South.NumAnts > 0 && scope.South.Team != Index) MoveSouth();
+            else if (scope.East.NumAnts > 0 && scope.East.Team != Index) MoveEast();
+            else if (scope.West.NumAnts > 0 && scope.West.Team != Index) MoveWest();
+        }
+
+        private void DefendBase(ScopeData scope)
+        {
+            if (!GotHomeAndReadyToDefend)
+            {
+                GoHome();
+                if (AtHomeBase()) GotHomeAndReadyToDefend = true;
+            }
+            else
+            {
+                PatrolBaseTest();
+            }
+        }
+
+        private void PatrolBase()
+        {
+            const int STEP_DURATION = 30;
+            if (DefendSetup == false)
+            {
+
+            }
+            else if (DefendSetup == true)
+            {
+
+                DefendSteps = (DefendSteps + 1) % (STEP_DURATION * 6);
+
+                if (DefendSteps < STEP_DURATION) MoveNorth();
+                else if (DefendSteps < STEP_DURATION * 2) MoveEast();
+                else if (DefendSteps < STEP_DURATION * 3) MoveSouth();
+                else if (DefendSteps < STEP_DURATION * 4) MoveWest();
+            }
+        }
+
+        private void PatrolBaseTest()
+        {
+            if (DefendSteps == 100)
+            {
+                DefendSteps = 21;
+            }
+
+            if (DefendSteps < 10) MoveNorth();
+            else if (DefendSteps < 20) MoveEast();
+            else if (DefendSteps < 40) MoveSouth();
+            else if (DefendSteps < 60) MoveWest();
+            else if (DefendSteps < 80) MoveNorth();
+            else if (DefendSteps < 100) MoveEast();
+
+            DefendSteps++;
+        }
+
+
+        private void SpyOnAnts()
+        {
+            MoveWest();
+        }
+
+        private void MoveTowards(int targetX, int targetY)
+        {
+            if (X > targetX) MoveWest();
+            else if (X < targetX) MoveEast();
+            else if (Y > targetY) MoveNorth();
+            else if (Y < targetY) MoveSouth();
+        }
+
+        private bool AtHomeBase() => X == 0 && Y == 0;
+        private bool AtFoodLocation() => X == FoodX && Y == FoodY;
+
+        private void MoveNorth() { North(true); Y--; }
+        private void MoveSouth() { South(true); Y++; }
+        private void MoveEast() { East(true); X++; }
+        private void MoveWest() { West(true); X--; }
     }
 }

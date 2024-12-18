@@ -6,6 +6,8 @@ using System.Transactions;
 
 namespace AntEngine
 {
+    //Hvornår man kan vinde - spil x antal spil og print ud hvordan det gik
+    //Action i git - Såden man kan spille med ens myre hver nat automatisk
     public class SquareData
     {
         public int NumAnts { get; set; } = 0;
@@ -62,13 +64,14 @@ namespace AntEngine
         int Width { get; init; }
         int Height { get; init; }
         public int RoundNo { get; private set; }
+        public int GameRounds { get; set; }
+
+        public List<string> WinnerList = new();
 
         readonly List<AntBase>[,] GridMap;
         readonly List<Type> Players;
         readonly List<AntHome> AntHomes;
         public readonly int[,] FoodMap;
-        
-        
 
         private Dictionary<int, int> statistics = new Dictionary<int, int>();
 
@@ -256,6 +259,7 @@ namespace AntEngine
                             Object? o = Activator.CreateInstance(myHome.Species);
                             if (o != null)
                             {
+                                myHome.Score++;
                                 AntBase ant = (AntBase)o;
                                 ant.Name = myHome.Species.Name;
                                 ant.Index = item.Ant.Index;
@@ -274,9 +278,30 @@ namespace AntEngine
                 from.Remove(item.Ant);
                 Add(item.Ant, new_x, new_y);
 
+            }
 
+            if (GameRounds == RoundNo)
+            {
+                TheWinner();
             }
         }
+
+        public void TheWinner()
+        {
+            if (GameRounds == RoundNo)
+            {
+                foreach (var stat in statistics)
+                {
+                    int antIndex = stat.Key;
+                    int antScore = stat.Value;
+                    string Name = Players[antIndex].Name;
+                    string ranking = $"Name: {Name} - Score: {antScore}";
+                    WinnerList.Add(ranking);
+                }
+            }
+
+        }
+
         public void DisplayMap()
         {
             Console.WriteLine($"Round: {RoundNo}");
@@ -442,6 +467,7 @@ namespace AntEngine
     {
         public int X { get; set; }
         public int Y { get; set; }
+        public int Score { get; set; }
         public Type Species { get; set; }
     }
 
