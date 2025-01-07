@@ -9,6 +9,8 @@
     <Grid Background="#d3d3d3">
         <TextBlock Text="Winner Scoreboard" FontSize="24" FontWeight="Bold" 
                    HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10"/>
+        <TextBlock Text="This game was developed by: Shaquille and Per :-)" FontSize="24" FontWeight="Bold" 
+                   HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10"/>
 
         <Border Background="#333333  " BorderBrush="DarkSeaGreen" BorderThickness="3" CornerRadius="15" Margin="60,60">
             <ListBox Name="WinnerListBox" 

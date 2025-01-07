@@ -22,7 +22,7 @@ public partial class MainWindow : Window
     private const int ImageWidth = 200;
     private const int ImageHeight = 200;
     private const int TimerIntervalInMs = 100;
-    private const int FinishRounds = 100; //Choose rounds before the game ends
+    private const int FinishRounds = 200; //Choose rounds before the game ends
     private int RoundCount;
     private WriteableBitmap _bitmap;
     readonly DispatcherTimer dispatcherTimer;
@@ -47,12 +47,12 @@ public partial class MainWindow : Window
                 break;
 
             case GameMode.DuoMatch:
-                players = new List<Type> { typeof(RonnieColemant), typeof(GoBackAnt) }; //<---- Add your ant here
+                players = new List<Type> { typeof(RonnieColemant), typeof(PMANDT) }; //<---- Add your ant here
                 my_map = new Map(ImageWidth, ImageHeight, players, startAnts: 1, PlayMode.DuoMatch);
                 break;
 
             case GameMode.Game:
-                players = new List<Type> { typeof(RonnieColemant), typeof(GoBackAnt) }; //<---- Add your ant here
+                players = new List<Type> { typeof(RonnieColemant), typeof(GoBackAnt), typeof(GoBackAnt), typeof(GoBackAnt), typeof(GoBackAnt), typeof(GoBackAnt) }; //<---- Add your ant here
                 my_map = new Map(ImageWidth, ImageHeight, players, startAnts: 1, PlayMode.Game);
                 break;
 
@@ -154,24 +154,112 @@ public partial class MainWindow : Window
                     byte green = 255;
                     byte blue = 0;
 
-                    if (field[0].Index == 0)
+                    // Simplified color assignment using a switch statement
+                    switch (field[0].Index)
                     {
-                        red = (byte)field.Count;
+                        case 0:
+                            red = 255;
+                            green = 0;
+                            blue = 0;
+                            break;
 
+                        case 1:
+                            red = 0;
+                            green = 255;
+                            blue = 0;
+                            break;
+
+                        case 2:
+                            red = 128;
+                            green = 0;
+                            blue = 128;
+                            break;
+
+                        case 3:
+                            red = 255;
+                            green = 255;
+                            blue = 0;
+                            break;
+
+                        case 4: 
+                            red = 255;
+                            green = 165;
+                            blue = 0;
+                            break;
+
+                        case 5: 
+                            red = 255;
+                            green = 192;
+                            blue = 203;
+                            break;
+
+                        case 6: 
+                            red = 0;
+                            green = 255;
+                            blue = 255;
+                            break;
+
+                        case 7:
+                            red = 255;
+                            green = 0;
+                            blue = 255;
+                            break;
+
+                        case 8:
+                            red = 0;
+                            green = 255;
+                            blue = 0;
+                            break;
+
+                        case 9:
+                            red = 139;
+                            green = 69;
+                            blue = 19;
+                            break;
+
+                        case 10:
+                            red = 169;
+                            green = 169;
+                            blue = 169;
+                            break;
+
+                        case 11:
+                            red = 255;
+                            green = 127;
+                            blue = 80;
+                            break;
+
+                        case 12:
+                            red = 0;
+                            green = 128;
+                            blue = 128;
+                            break;
+
+                        case 13:
+                            red = 255;
+                            green = 215;
+                            blue = 0;
+                            break;
+
+                        case 14:
+                            red = 75;
+                            green = 0;
+                            blue = 130;
+                            break;
+
+                        // Default case (if the Index doesn't match any of the cases)
+                        default:
+                            red = 255;
+                            green = 255;
+                            blue = 255;  // White or any default color
+                            break;
                     }
-
-                    if (field[0].Index == 1)
-                    {
-                        green = (byte)field.Count;
-
-
-                    }
-
 
                     byte alpha = 255;
-
                     SetPixel(x, y, red, green, blue, alpha);
                 }
+
+
 
 
                 homes = my_map.AntHome(x, y);
@@ -192,13 +280,10 @@ public partial class MainWindow : Window
 
     private void SetPixel(int x, int y, byte r, byte g, byte b, byte a)
     {
-        // Create an array to represent the pixel color in BGRA format
         byte[] colorData = { b, g, r, a };
 
-        // Define the area to update (1x1 pixel)
         Int32Rect rect = new Int32Rect(x, y, 1, 1);
 
-        // Update the pixel color using WritePixels
         _bitmap.WritePixels(rect, colorData, 4, 0);
     }
 
